@@ -1,0 +1,2087 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Observatório de Cultura — Consultoria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-void: #0D0D0E;
+      --bg-surface: #141416;
+      --bg-card: #1A1A1D;
+      --bg-raised: #202024;
+      --border: rgba(201,168,76,0.12);
+      --border-strong: rgba(201,168,76,0.28);
+      --gold: #C9A84C;
+      --gold-light: #E2C577;
+      --gold-dim: rgba(201,168,76,0.55);
+      --cream: #F0EBE1;
+      --cream-dim: rgba(240,235,225,0.55);
+      --cream-muted: rgba(240,235,225,0.28);
+      --red: #C05046;
+      --green: #4A9072;
+      --blue: #4A7CB0;
+      --purple: #7C5FA0;
+      --text-primary: #F0EBE1;
+      --text-secondary: rgba(240,235,225,0.65);
+      --text-muted: rgba(240,235,225,0.35);
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg-void);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── LAYOUT ─────────────────────────────────── */
+    .app {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      grid-template-rows: auto 1fr;
+      min-height: 100vh;
+    }
+
+    /* ─── SIDEBAR ─────────────────────────────────── */
+    .sidebar {
+      grid-row: 1 / 3;
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar-logo {
+      padding: 32px 24px 28px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-logo .label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .sidebar-logo .title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--cream);
+      line-height: 1.2;
+    }
+
+    .sidebar-logo .title em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    .sidebar-nav {
+      padding: 20px 0;
+      flex: 1;
+    }
+
+    .nav-section {
+      margin-bottom: 8px;
+    }
+
+    .nav-section-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      padding: 8px 24px 4px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 24px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 400;
+      transition: all 0.2s;
+      border-left: 2px solid transparent;
+      position: relative;
+    }
+
+    .nav-item:hover {
+      color: var(--cream);
+      background: rgba(201,168,76,0.04);
+    }
+
+    .nav-item.active {
+      color: var(--gold-light);
+      border-left-color: var(--gold);
+      background: rgba(201,168,76,0.07);
+    }
+
+    .nav-item .icon {
+      width: 16px;
+      height: 16px;
+      opacity: 0.7;
+      flex-shrink: 0;
+    }
+
+    .nav-item.active .icon { opacity: 1; }
+
+    .nav-badge {
+      margin-left: auto;
+      background: var(--gold);
+      color: var(--bg-void);
+      font-size: 10px;
+      font-weight: 500;
+      padding: 1px 6px;
+      border-radius: 10px;
+      font-family: var(--font-mono);
+    }
+
+    .sidebar-footer {
+      padding: 20px 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .sidebar-footer .period {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .sidebar-footer .period-value {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* ─── TOPBAR ─────────────────────────────────── */
+    .topbar {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+
+    .topbar-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .topbar-breadcrumb .current {
+      color: var(--cream);
+      font-size: 13px;
+      font-family: var(--font-body);
+      font-weight: 500;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      font-family: var(--font-body);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-strong);
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg-raised);
+      color: var(--cream);
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: var(--bg-void);
+      font-weight: 600;
+    }
+
+    .btn-gold:hover { background: var(--gold-light); }
+
+    /* ─── MAIN CONTENT ───────────────────────────── */
+    .main {
+      padding: 36px;
+      overflow-y: auto;
+    }
+
+    /* ─── TABS ─────────────────────────────────────── */
+    .tab-group {
+      display: none;
+    }
+    .tab-group.active {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── PAGE HEADER ─────────────────────────────── */
+    .page-header {
+      margin-bottom: 36px;
+    }
+
+    .page-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .page-title {
+      font-family: var(--font-display);
+      font-size: 42px;
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .page-title strong {
+      font-weight: 700;
+    }
+
+    .page-title em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    .page-subtitle {
+      color: var(--text-secondary);
+      font-size: 14px;
+      max-width: 480px;
+    }
+
+    /* ─── METRICS ROW ─────────────────────────────── */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .metric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 22px 24px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .metric-card:hover { border-color: var(--border-strong); }
+
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+
+    .metric-card.green::before { background: linear-gradient(90deg, var(--green), transparent); }
+    .metric-card.red::before { background: linear-gradient(90deg, var(--red), transparent); }
+    .metric-card.blue::before { background: linear-gradient(90deg, var(--blue), transparent); }
+    .metric-card.purple::before { background: linear-gradient(90deg, var(--purple), transparent); }
+
+    .metric-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .metric-value {
+      font-family: var(--font-display);
+      font-size: 44px;
+      font-weight: 600;
+      color: var(--cream);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .metric-unit {
+      font-size: 20px;
+      color: var(--gold-dim);
+    }
+
+    .metric-delta {
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .delta-up { color: var(--green); }
+    .delta-down { color: var(--red); }
+    .delta-neutral { color: var(--text-muted); }
+
+    .metric-sub {
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+
+    /* ─── GRID 2 COL ─────────────────────────────── */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .grid-3-1 {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .grid-1-2 {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    /* ─── CARD ─────────────────────────────────────── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 24px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--cream);
+    }
+
+    .card-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .card-tag {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 3px;
+      background: rgba(201,168,76,0.1);
+      color: var(--gold);
+      border: 1px solid rgba(201,168,76,0.2);
+    }
+
+    /* ─── PILLAR / VALOR ──────────────────────────── */
+    .pillar-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .pillar-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .pillar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .pillar-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--cream);
+    }
+
+    .pillar-score {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--gold);
+    }
+
+    .pillar-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .progress-bar {
+      height: 3px;
+      background: var(--bg-raised);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%);
+      transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .progress-fill.green { background: linear-gradient(90deg, var(--green), #6EC49A); }
+    .progress-fill.blue  { background: linear-gradient(90deg, var(--blue), #6EA9D8); }
+    .progress-fill.red   { background: linear-gradient(90deg, var(--red), #D07A75); }
+    .progress-fill.purple{ background: linear-gradient(90deg, var(--purple), #A07ED0); }
+
+    /* ─── RADAR CHART ─────────────────────────────── */
+    .radar-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 0;
+    }
+
+    /* ─── TIMELINE / AÇÕES ────────────────────────── */
+    .action-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .action-item {
+      display: grid;
+      grid-template-columns: 20px 1fr auto;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+
+    .action-item:last-child { border-bottom: none; }
+
+    .action-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    .dot-gold { background: var(--gold); }
+    .dot-green { background: var(--green); }
+    .dot-red { background: var(--red); }
+    .dot-blue { background: var(--blue); }
+    .dot-muted { background: var(--text-muted); }
+
+    .action-title {
+      font-size: 13px;
+      color: var(--cream);
+      font-weight: 500;
+      margin-bottom: 3px;
+    }
+
+    .action-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .action-meta span {
+      color: var(--text-secondary);
+    }
+
+    .action-status {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    .status-done {
+      background: rgba(74,144,114,0.15);
+      color: var(--green);
+      border: 1px solid rgba(74,144,114,0.25);
+    }
+
+    .status-progress {
+      background: rgba(201,168,76,0.1);
+      color: var(--gold);
+      border: 1px solid rgba(201,168,76,0.2);
+    }
+
+    .status-pending {
+      background: rgba(240,235,225,0.05);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .status-critical {
+      background: rgba(192,80,70,0.15);
+      color: var(--red);
+      border: 1px solid rgba(192,80,70,0.25);
+    }
+
+    /* ─── HEATMAP ─────────────────────────────────── */
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 4px;
+    }
+
+    .heatmap-col-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .heatmap-cell {
+      aspect-ratio: 1;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    .heatmap-cell:hover { transform: scale(1.2); }
+
+    .heat-0 { background: var(--bg-raised); }
+    .heat-1 { background: rgba(201,168,76,0.2); }
+    .heat-2 { background: rgba(201,168,76,0.4); }
+    .heat-3 { background: rgba(201,168,76,0.65); }
+    .heat-4 { background: var(--gold); }
+
+    /* ─── NOTES ───────────────────────────────────── */
+    .note-editor {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 16px;
+      color: var(--cream);
+      font-family: var(--font-body);
+      font-size: 13px;
+      line-height: 1.7;
+      resize: none;
+      width: 100%;
+      min-height: 140px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .note-editor:focus {
+      border-color: var(--border-strong);
+    }
+
+    .note-editor::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* ─── NOTE CARDS ─────────────────────────────── */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .note-card {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 16px;
+      position: relative;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .note-card:hover {
+      border-color: var(--border-strong);
+      background: #242428;
+    }
+
+    .note-card-tag {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .note-card-body {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .note-card-footer {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    /* ─── DATA TABLE ─────────────────────────────── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .data-table th {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .td-name { color: var(--cream); font-weight: 500; }
+
+    .score-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 22px;
+      border-radius: 3px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .pill-high { background: rgba(74,144,114,0.15); color: var(--green); }
+    .pill-mid  { background: rgba(201,168,76,0.12); color: var(--gold); }
+    .pill-low  { background: rgba(192,80,70,0.15); color: var(--red); }
+
+    /* ─── FORM NEW ACTION ─────────────────────────── */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .form-input, .form-select {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 9px 12px;
+      color: var(--cream);
+      font-family: var(--font-body);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+    }
+
+    .form-input:focus, .form-select:focus {
+      border-color: var(--border-strong);
+    }
+
+    .form-input::placeholder { color: var(--text-muted); }
+
+    /* ─── GAUGE ───────────────────────────────────── */
+    .gauge-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ─── TIMELINE VERTICAL ───────────────────────── */
+    .timeline {
+      position: relative;
+      padding-left: 24px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -21px;
+      top: 6px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 2px solid var(--bg-card);
+      box-shadow: 0 0 0 1px var(--gold);
+    }
+
+    .timeline-date {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .timeline-title {
+      font-size: 13px;
+      color: var(--cream);
+      font-weight: 500;
+    }
+
+    .timeline-body {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* ─── DIVIDER ─────────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 24px 0;
+    }
+
+    /* ─── SCROLLBAR ───────────────────────────────── */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg-void); }
+    ::-webkit-scrollbar-thumb { background: var(--bg-raised); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+    /* ─── MODAL ───────────────────────────────────── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      padding: 32px;
+      width: 520px;
+      max-width: 90vw;
+      animation: modalIn 0.2s ease;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.96) translateY(8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--cream);
+      margin-bottom: 4px;
+    }
+
+    .modal-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .full-form .form-group {
+      margin-bottom: 16px;
+    }
+
+    /* ─── TOAST ───────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--cream);
+      z-index: 200;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      flex-shrink: 0;
+    }
+
+    /* ─── CHART BARS ─────────────────────────────── */
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 80px;
+    }
+
+    .bar-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      height: 100%;
+      justify-content: flex-end;
+    }
+
+    .bar {
+      width: 100%;
+      border-radius: 2px 2px 0 0;
+      background: linear-gradient(180deg, var(--gold) 0%, rgba(201,168,76,0.5) 100%);
+      transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .bar-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* ─── SEGMENTED CONTROL ────────────────────────── */
+    .seg-control {
+      display: inline-flex;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px;
+      gap: 2px;
+    }
+
+    .seg-btn {
+      padding: 5px 12px;
+      font-size: 12px;
+      font-family: var(--font-body);
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 3px;
+      border: none;
+      background: transparent;
+      transition: all 0.15s;
+    }
+
+    .seg-btn.active {
+      background: var(--bg-raised);
+      color: var(--cream);
+    }
+
+    /* ─── LOADING LINES ───────────────────────────── */
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .sparkline {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      height: 20px;
+    }
+
+    .spark-bar {
+      width: 3px;
+      border-radius: 1px;
+      background: var(--gold-dim);
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <!-- ─── SIDEBAR ─── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="label">Plataforma</div>
+      <div class="title">Observatório<br>de <em>Cultura</em></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Visão Geral</div>
+        <div class="nav-item active" onclick="navigate('dashboard', this)">
+          <svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/>
+            <rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/>
+          </svg>
+          Dashboard
+        </div>
+        <div class="nav-item" onclick="navigate('diagnostico', this)">
+          <svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/>
+          </svg>
+          Diagnóstico
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">Cultura</div>
+        <div class="nav-item" onclick="navigate('pilares', this)">
+          <svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 13V6M8 13V3M13 13V8"/>
+          </svg>
+          Pilares &amp; Valores
+        </div>
+        <div class="nav-item" onclick="navigate('acoes', this)">
+          <svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4 8h8M4 4h5M4 12h6"/><circle cx="12" cy="4" r="1.5" fill="currentColor" stroke="none"/>
+          </svg>
+          Iniciativas &amp; Ações
+          <span class="nav-badge">7</span>
+        </div>
+        <div class="nav-item" onclick="navigate('equipe', this)">
+          <svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="6" cy="5" r="2.5"/><path d="M1 13c0-2.8 2.2-5 5-5s5 2.2 5 5"/>
+            <circle cx="12" cy="5" r="2"/><path d="M12 10c1.7 0 3 1.3 3 3"/>
+          </svg>
+          Equipe
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">Registros</div>
+        <div class="nav-item" onclick="navigate('notas', this)">
+          <svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="2" width="12" height="12" rx="1"/>
+            <path d="M5 6h6M5 9h4"/>
+          </svg>
+          Notas &amp; Observações
+        </div>
+        <div class="nav-item" onclick="navigate('historico', this)">
+          <svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M8 4v4l3 1.5"/><circle cx="8" cy="8" r="6"/>
+          </svg>
+          Histórico
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="period">Período ativo</div>
+      <div class="period-value">Jan — Jun 2025</div>
+    </div>
+  </aside>
+
+  <!-- ─── TOPBAR ─── -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span>Observatório</span>
+      <span>›</span>
+      <span class="current" id="breadcrumb-current">Dashboard</span>
+    </div>
+    <div class="topbar-actions">
+      <div class="seg-control">
+        <button class="seg-btn active">2025</button>
+        <button class="seg-btn">2024</button>
+      </div>
+      <button class="btn btn-ghost" onclick="openModal()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M6 2v8M2 6h8"/>
+        </svg>
+        Nova Entrada
+      </button>
+      <button class="btn btn-gold">Exportar Relatório</button>
+    </div>
+  </header>
+
+  <!-- ─── MAIN ─── -->
+  <main class="main">
+
+    <!-- ══════════════ DASHBOARD ══════════════ -->
+    <div class="tab-group active" id="tab-dashboard">
+      <div class="page-header">
+        <div class="page-eyebrow">Visão Consolidada</div>
+        <h1 class="page-title">Saúde <strong>Cultural</strong><br><em>da Organização</em></h1>
+        <p class="page-subtitle">Acompanhamento em tempo real dos indicadores, pilares e progresso das iniciativas de cultura.</p>
+      </div>
+
+      <!-- METRICS -->
+      <div class="metrics-row">
+        <div class="metric-card">
+          <div class="metric-label">Índice Cultural</div>
+          <div class="metric-value">7.4<span class="metric-unit">/10</span></div>
+          <div class="metric-delta delta-up">↑ +0.6 vs semestre anterior</div>
+        </div>
+        <div class="metric-card green">
+          <div class="metric-label">Engajamento</div>
+          <div class="metric-value">82<span class="metric-unit">%</span></div>
+          <div class="metric-delta delta-up">↑ +9pp vs 2024</div>
+        </div>
+        <div class="metric-card blue">
+          <div class="metric-label">Iniciativas Ativas</div>
+          <div class="metric-value">14</div>
+          <div class="metric-delta delta-neutral">— 3 concluídas este mês</div>
+        </div>
+        <div class="metric-card red">
+          <div class="metric-label">Pontos de Atenção</div>
+          <div class="metric-value">3</div>
+          <div class="metric-delta delta-down">↑ +1 identificado</div>
+        </div>
+      </div>
+
+      <!-- PILARES + RADAR -->
+      <div class="grid-3-1">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Pilares Culturais</div>
+              <div class="card-subtitle">Avaliação por dimensão — ciclo 2025.1</div>
+            </div>
+            <span class="card-tag">Diagnóstico</span>
+          </div>
+          <div class="pillar-list">
+            <div class="pillar-item">
+              <div class="pillar-header">
+                <span class="pillar-name">Liderança Inspiradora</span>
+                <span class="pillar-score">8.1</span>
+              </div>
+              <div class="pillar-desc">Clareza de propósito, capacidade de mobilização e comunicação.</div>
+              <div class="progress-bar"><div class="progress-fill green" style="width:81%"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header">
+                <span class="pillar-name">Colaboração &amp; Confiança</span>
+                <span class="pillar-score">7.5</span>
+              </div>
+              <div class="pillar-desc">Relações interpessoais, segurança psicológica e trabalho em equipe.</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header">
+                <span class="pillar-name">Inovação &amp; Aprendizado</span>
+                <span class="pillar-score">6.9</span>
+              </div>
+              <div class="pillar-desc">Abertura ao erro, experimentação e desenvolvimento contínuo.</div>
+              <div class="progress-bar"><div class="progress-fill blue" style="width:69%"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header">
+                <span class="pillar-name">Foco no Cliente</span>
+                <span class="pillar-score">8.4</span>
+              </div>
+              <div class="pillar-desc">Orientação ao cliente interno e externo, qualidade de entrega.</div>
+              <div class="progress-bar"><div class="progress-fill green" style="width:84%"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header">
+                <span class="pillar-name">Diversidade &amp; Inclusão</span>
+                <span class="pillar-score">5.8</span>
+              </div>
+              <div class="pillar-desc">Representatividade, equidade e ambiente de pertencimento.</div>
+              <div class="progress-bar"><div class="progress-fill red" style="width:58%"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header">
+                <span class="pillar-name">Propósito &amp; Significado</span>
+                <span class="pillar-score">7.2</span>
+              </div>
+              <div class="pillar-desc">Conexão com a missão, valores e impacto do trabalho.</div>
+              <div class="progress-bar"><div class="progress-fill purple" style="width:72%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Radar</div>
+              <div class="card-subtitle">Dimensões culturais</div>
+            </div>
+          </div>
+          <div class="radar-wrap">
+            <svg width="180" height="180" viewBox="0 0 180 180">
+              <defs>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="2" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              <!-- Grid hexagons -->
+              <g stroke="rgba(201,168,76,0.12)" fill="none" stroke-width="0.5">
+                <polygon points="90,30 130,52 130,98 90,120 50,98 50,52"/>
+                <polygon points="90,45 120,63 120,87 90,105 60,87 60,63"/>
+                <polygon points="90,60 110,72 110,78 90,90 70,78 70,72"/>
+              </g>
+              <!-- Axes -->
+              <g stroke="rgba(201,168,76,0.1)" stroke-width="0.5">
+                <line x1="90" y1="90" x2="90" y2="30"/>
+                <line x1="90" y1="90" x2="130" y2="52"/>
+                <line x1="90" y1="90" x2="130" y2="98"/>
+                <line x1="90" y1="90" x2="90" y2="120"/>
+                <line x1="90" y1="90" x2="50" y2="98"/>
+                <line x1="90" y1="90" x2="50" y2="52"/>
+              </g>
+              <!-- Data polygon (scores: 8.1, 7.5, 6.9, 8.4, 5.8, 7.2) -->
+              <polygon
+                points="90,38 123,58 121,89 90,112 55,96 57,60"
+                fill="rgba(201,168,76,0.15)"
+                stroke="var(--gold)"
+                stroke-width="1.5"
+                filter="url(#glow)"
+              />
+              <!-- Dots -->
+              <circle cx="90" cy="38" r="3" fill="var(--gold)"/>
+              <circle cx="123" cy="58" r="3" fill="var(--gold)"/>
+              <circle cx="121" cy="89" r="3" fill="var(--gold)"/>
+              <circle cx="90" cy="112" r="3" fill="var(--gold)"/>
+              <circle cx="55" cy="96" r="3" fill="var(--red)"/>
+              <circle cx="57" cy="60" r="3" fill="var(--gold)"/>
+              <!-- Labels -->
+              <text x="90" y="24" text-anchor="middle" fill="rgba(240,235,225,0.5)" font-family="DM Mono" font-size="8">Liderança</text>
+              <text x="140" y="52" text-anchor="start" fill="rgba(240,235,225,0.5)" font-family="DM Mono" font-size="8">Colabor.</text>
+              <text x="140" y="100" text-anchor="start" fill="rgba(240,235,225,0.5)" font-family="DM Mono" font-size="8">Inovação</text>
+              <text x="90" y="132" text-anchor="middle" fill="rgba(240,235,225,0.5)" font-family="DM Mono" font-size="8">Cliente</text>
+              <text x="38" y="100" text-anchor="end" fill="rgba(192,80,70,0.8)" font-family="DM Mono" font-size="8">D&amp;I</text>
+              <text x="38" y="52" text-anchor="end" fill="rgba(240,235,225,0.5)" font-family="DM Mono" font-size="8">Propósito</text>
+            </svg>
+          </div>
+          <hr class="divider">
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-size:12px;color:var(--text-muted)">Média geral</span>
+              <span style="font-family:var(--font-mono);font-size:13px;color:var(--gold)">7.32</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-size:12px;color:var(--text-muted)">Maior dimensão</span>
+              <span style="font-family:var(--font-mono);font-size:13px;color:var(--green)">Foco no Cliente</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-size:12px;color:var(--text-muted)">Menor dimensão</span>
+              <span style="font-family:var(--font-mono);font-size:13px;color:var(--red)">D&amp;I</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AÇÕES RECENTES + EVOLUÇÃO -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Últimas Iniciativas</div>
+              <div class="card-subtitle">Ações registradas recentemente</div>
+            </div>
+            <button class="btn btn-ghost" onclick="navigate('acoes', document.querySelector('[onclick*=acoes]'))">Ver todas</button>
+          </div>
+          <div class="action-list">
+            <div class="action-item">
+              <div class="action-dot dot-green"></div>
+              <div>
+                <div class="action-title">Workshop de Segurança Psicológica</div>
+                <div class="action-meta">Pilar: <span>Colaboração</span> · <span>Jun 2025</span></div>
+              </div>
+              <span class="action-status status-done">Concluído</span>
+            </div>
+            <div class="action-item">
+              <div class="action-dot dot-gold"></div>
+              <div>
+                <div class="action-title">Programa Mentoria Reversa</div>
+                <div class="action-meta">Pilar: <span>Liderança</span> · <span>Mai — Jul 2025</span></div>
+              </div>
+              <span class="action-status status-progress">Em Curso</span>
+            </div>
+            <div class="action-item">
+              <div class="action-dot dot-gold"></div>
+              <div>
+                <div class="action-title">Revisão da Política de D&amp;I</div>
+                <div class="action-meta">Pilar: <span>Diversidade</span> · <span>Jun 2025</span></div>
+              </div>
+              <span class="action-status status-progress">Em Curso</span>
+            </div>
+            <div class="action-item">
+              <div class="action-dot dot-muted"></div>
+              <div>
+                <div class="action-title">Pesquisa de Clima Semestral</div>
+                <div class="action-meta">Pilar: <span>Geral</span> · <span>Jul 2025</span></div>
+              </div>
+              <span class="action-status status-pending">Planejado</span>
+            </div>
+            <div class="action-item">
+              <div class="action-dot dot-red"></div>
+              <div>
+                <div class="action-title">Definição de OKRs Culturais</div>
+                <div class="action-meta">Pilar: <span>Propósito</span> · <span>Mai 2025</span></div>
+              </div>
+              <span class="action-status status-critical">Atrasado</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Evolução do Índice</div>
+              <div class="card-subtitle">Últimos 12 meses</div>
+            </div>
+            <span class="card-tag">Tendência +</span>
+          </div>
+          <div style="margin-bottom:16px;">
+            <div class="bar-chart" id="evolution-chart">
+              <div class="bar-col"><div class="bar" style="height:52%"></div><div class="bar-label">Jul</div></div>
+              <div class="bar-col"><div class="bar" style="height:58%"></div><div class="bar-label">Ago</div></div>
+              <div class="bar-col"><div class="bar" style="height:55%"></div><div class="bar-label">Set</div></div>
+              <div class="bar-col"><div class="bar" style="height:61%"></div><div class="bar-label">Out</div></div>
+              <div class="bar-col"><div class="bar" style="height:63%"></div><div class="bar-label">Nov</div></div>
+              <div class="bar-col"><div class="bar" style="height:60%"></div><div class="bar-label">Dez</div></div>
+              <div class="bar-col"><div class="bar" style="height:65%"></div><div class="bar-label">Jan</div></div>
+              <div class="bar-col"><div class="bar" style="height:68%"></div><div class="bar-label">Fev</div></div>
+              <div class="bar-col"><div class="bar" style="height:64%"></div><div class="bar-label">Mar</div></div>
+              <div class="bar-col"><div class="bar" style="height:70%"></div><div class="bar-label">Abr</div></div>
+              <div class="bar-col"><div class="bar" style="height:72%"></div><div class="bar-label">Mai</div></div>
+              <div class="bar-col"><div class="bar" style="height:74%; background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 100%);"></div><div class="bar-label" style="color:var(--gold)">Jun</div></div>
+            </div>
+          </div>
+          <hr class="divider" style="margin:16px 0;">
+
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:4px;">
+            <div>
+              <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">Mínimo</div>
+              <div style="font-family:var(--font-display);font-size:26px;font-weight:600;color:var(--cream);">5.9</div>
+              <div style="font-size:11px;color:var(--text-muted)">Jul 2024</div>
+            </div>
+            <div>
+              <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">Máximo</div>
+              <div style="font-family:var(--font-display);font-size:26px;font-weight:600;color:var(--gold);">7.4</div>
+              <div style="font-size:11px;color:var(--text-muted)">Jun 2025</div>
+            </div>
+            <div>
+              <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">Variação</div>
+              <div style="font-family:var(--font-display);font-size:26px;font-weight:600;color:var(--green);">+25%</div>
+              <div style="font-size:11px;color:var(--text-muted)">12 meses</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ATIVIDADE -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Mapa de Atividade Cultural</div>
+            <div class="card-subtitle">Intensidade de ações e registros ao longo do ano</div>
+          </div>
+        </div>
+        <div style="margin-bottom:8px;display:flex;gap:24px;">
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;">Jan</div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-left:auto;">Jun</div>
+        </div>
+        <div class="heatmap-grid" id="heatmap"></div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:12px;justify-content:flex-end;">
+          <span style="font-size:11px;color:var(--text-muted)">Menos</span>
+          <div style="width:12px;height:12px;border-radius:2px;" class="heat-0"></div>
+          <div style="width:12px;height:12px;border-radius:2px;" class="heat-1"></div>
+          <div style="width:12px;height:12px;border-radius:2px;" class="heat-2"></div>
+          <div style="width:12px;height:12px;border-radius:2px;" class="heat-3"></div>
+          <div style="width:12px;height:12px;border-radius:2px;" class="heat-4"></div>
+          <span style="font-size:11px;color:var(--text-muted)">Mais</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════ DIAGNÓSTICO ══════════════ -->
+    <div class="tab-group" id="tab-diagnostico">
+      <div class="page-header">
+        <div class="page-eyebrow">Análise Aprofundada</div>
+        <h1 class="page-title"><em>Diagnóstico</em><br><strong>Cultural</strong></h1>
+        <p class="page-subtitle">Visão detalhada por dimensão, equipe e período para identificar padrões e oportunidades.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Score por Área</div><div class="card-subtitle">Avaliação consolidada por departamento</div></div>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Área</th>
+                <th>Liderança</th>
+                <th>Colabor.</th>
+                <th>Inovação</th>
+                <th>Geral</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-name">Comercial</td>
+                <td><span class="score-pill pill-high">8.2</span></td>
+                <td><span class="score-pill pill-high">7.9</span></td>
+                <td><span class="score-pill pill-mid">6.5</span></td>
+                <td><span class="score-pill pill-high">7.8</span></td>
+              </tr>
+              <tr>
+                <td class="td-name">Operações</td>
+                <td><span class="score-pill pill-mid">7.0</span></td>
+                <td><span class="score-pill pill-mid">7.2</span></td>
+                <td><span class="score-pill pill-mid">6.8</span></td>
+                <td><span class="score-pill pill-mid">7.0</span></td>
+              </tr>
+              <tr>
+                <td class="td-name">Tecnologia</td>
+                <td><span class="score-pill pill-mid">7.5</span></td>
+                <td><span class="score-pill pill-high">8.1</span></td>
+                <td><span class="score-pill pill-high">8.3</span></td>
+                <td><span class="score-pill pill-high">7.9</span></td>
+              </tr>
+              <tr>
+                <td class="td-name">Pessoas &amp; Cultura</td>
+                <td><span class="score-pill pill-high">8.8</span></td>
+                <td><span class="score-pill pill-high">8.6</span></td>
+                <td><span class="score-pill pill-mid">7.1</span></td>
+                <td><span class="score-pill pill-high">8.4</span></td>
+              </tr>
+              <tr>
+                <td class="td-name">Financeiro</td>
+                <td><span class="score-pill pill-mid">6.9</span></td>
+                <td><span class="score-pill pill-mid">6.5</span></td>
+                <td><span class="score-pill pill-low">5.2</span></td>
+                <td><span class="score-pill pill-mid">6.3</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Pontos de Atenção</div><div class="card-subtitle">Dimensões com maior gap</div></div>
+          </div>
+          <div class="action-list">
+            <div class="action-item">
+              <div class="action-dot dot-red"></div>
+              <div>
+                <div class="action-title">Diversidade &amp; Inclusão — Financeiro</div>
+                <div class="action-meta">Score <span>4.8</span> · Meta <span>7.0</span> · Gap <span style="color:var(--red)">−2.2</span></div>
+              </div>
+              <span class="action-status status-critical">Crítico</span>
+            </div>
+            <div class="action-item">
+              <div class="action-dot dot-red"></div>
+              <div>
+                <div class="action-title">Inovação — Financeiro</div>
+                <div class="action-meta">Score <span>5.2</span> · Meta <span>7.0</span> · Gap <span style="color:var(--red)">−1.8</span></div>
+              </div>
+              <span class="action-status status-critical">Crítico</span>
+            </div>
+            <div class="action-item">
+              <div class="action-dot dot-gold"></div>
+              <div>
+                <div class="action-title">Propósito — Operações</div>
+                <div class="action-meta">Score <span>6.1</span> · Meta <span>7.5</span> · Gap <span style="color:var(--gold)">−1.4</span></div>
+              </div>
+              <span class="action-status status-progress">Atenção</span>
+            </div>
+            <div class="action-item">
+              <div class="action-dot dot-gold"></div>
+              <div>
+                <div class="action-title">Colaboração — Comercial</div>
+                <div class="action-meta">Score <span>6.3</span> · Meta <span>7.5</span> · Gap <span style="color:var(--gold)">−1.2</span></div>
+              </div>
+              <span class="action-status status-progress">Atenção</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════ PILARES ══════════════ -->
+    <div class="tab-group" id="tab-pilares">
+      <div class="page-header">
+        <div class="page-eyebrow">Fundamentos</div>
+        <h1 class="page-title">Pilares &amp;<br><em>Valores</em></h1>
+        <p class="page-subtitle">Definição, acompanhamento e evolução de cada dimensão cultural da organização.</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+        <div class="card" style="border-top:2px solid var(--green)">
+          <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;color:var(--green);text-transform:uppercase;margin-bottom:10px">Liderança</div>
+          <div class="card-title" style="margin-bottom:8px">Liderança Inspiradora</div>
+          <p style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">Líderes que mobilizam, comunicam com clareza e desenvolvem as pessoas ao redor deles.</p>
+          <div class="progress-bar" style="margin-bottom:8px"><div class="progress-fill green" style="width:81%"></div></div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;color:var(--text-muted)">
+            <span>Score atual</span><span style="color:var(--green)">8.1 / 10</span>
+          </div>
+          <hr class="divider">
+          <div style="font-size:12px;color:var(--text-muted)">3 iniciativas ativas · Próxima revisão: Jul/25</div>
+        </div>
+
+        <div class="card" style="border-top:2px solid var(--gold)">
+          <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin-bottom:10px">Relacionamento</div>
+          <div class="card-title" style="margin-bottom:8px">Colaboração &amp; Confiança</div>
+          <p style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">Ambiente de trabalho seguro, relações de confiança e trabalho em equipe efetivo.</p>
+          <div class="progress-bar" style="margin-bottom:8px"><div class="progress-fill" style="width:75%"></div></div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;color:var(--text-muted)">
+            <span>Score atual</span><span style="color:var(--gold)">7.5 / 10</span>
+          </div>
+          <hr class="divider">
+          <div style="font-size:12px;color:var(--text-muted)">2 iniciativas ativas · Próxima revisão: Ago/25</div>
+        </div>
+
+        <div class="card" style="border-top:2px solid var(--blue)">
+          <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;color:var(--blue);text-transform:uppercase;margin-bottom:10px">Crescimento</div>
+          <div class="card-title" style="margin-bottom:8px">Inovação &amp; Aprendizado</div>
+          <p style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">Cultura de experimentação, tolerância ao erro e desenvolvimento contínuo das pessoas.</p>
+          <div class="progress-bar" style="margin-bottom:8px"><div class="progress-fill blue" style="width:69%"></div></div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;color:var(--text-muted)">
+            <span>Score atual</span><span style="color:var(--blue)">6.9 / 10</span>
+          </div>
+          <hr class="divider">
+          <div style="font-size:12px;color:var(--text-muted)">4 iniciativas ativas · Próxima revisão: Jul/25</div>
+        </div>
+
+        <div class="card" style="border-top:2px solid var(--green)">
+          <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;color:var(--green);text-transform:uppercase;margin-bottom:10px">Orientação</div>
+          <div class="card-title" style="margin-bottom:8px">Foco no Cliente</div>
+          <p style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">Mentalidade centrada no cliente, qualidade de entrega e responsividade às necessidades.</p>
+          <div class="progress-bar" style="margin-bottom:8px"><div class="progress-fill green" style="width:84%"></div></div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;color:var(--text-muted)">
+            <span>Score atual</span><span style="color:var(--green)">8.4 / 10</span>
+          </div>
+          <hr class="divider">
+          <div style="font-size:12px;color:var(--text-muted)">1 iniciativa ativa · Próxima revisão: Set/25</div>
+        </div>
+
+        <div class="card" style="border-top:2px solid var(--red)">
+          <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;color:var(--red);text-transform:uppercase;margin-bottom:10px">Equidade ⚠</div>
+          <div class="card-title" style="margin-bottom:8px">Diversidade &amp; Inclusão</div>
+          <p style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">Representatividade, ambiente de pertencimento e equidade de oportunidades.</p>
+          <div class="progress-bar" style="margin-bottom:8px"><div class="progress-fill red" style="width:58%"></div></div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;color:var(--text-muted)">
+            <span>Score atual</span><span style="color:var(--red)">5.8 / 10</span>
+          </div>
+          <hr class="divider">
+          <div style="font-size:12px;color:var(--red)">Ponto de atenção crítico · Ação urgente recomendada</div>
+        </div>
+
+        <div class="card" style="border-top:2px solid var(--purple)">
+          <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;color:var(--purple);text-transform:uppercase;margin-bottom:10px">Identidade</div>
+          <div class="card-title" style="margin-bottom:8px">Propósito &amp; Significado</div>
+          <p style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">Conexão das pessoas com a missão, impacto percebido e sentido no trabalho diário.</p>
+          <div class="progress-bar" style="margin-bottom:8px"><div class="progress-fill purple" style="width:72%"></div></div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;color:var(--text-muted)">
+            <span>Score atual</span><span style="color:var(--purple)">7.2 / 10</span>
+          </div>
+          <hr class="divider">
+          <div style="font-size:12px;color:var(--text-muted)">2 iniciativas planejadas · Próxima revisão: Ago/25</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════ AÇÕES ══════════════ -->
+    <div class="tab-group" id="tab-acoes">
+      <div class="page-header">
+        <div class="page-eyebrow">Execução</div>
+        <h1 class="page-title">Iniciativas<br>&amp; <em>Ações</em></h1>
+        <p class="page-subtitle">Registro e acompanhamento de todas as ações do projeto de cultura.</p>
+      </div>
+
+      <div class="card" style="margin-bottom:24px;">
+        <div class="card-header">
+          <div class="card-title">Nova Ação</div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Título da Ação</label>
+            <input class="form-input" type="text" placeholder="Ex: Workshop de Valores...">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Pilar</label>
+            <select class="form-select">
+              <option>Liderança</option>
+              <option>Colaboração</option>
+              <option>Inovação</option>
+              <option>Cliente</option>
+              <option>Diversidade</option>
+              <option>Propósito</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Prazo</label>
+            <input class="form-input" type="month" value="2025-07">
+          </div>
+          <button class="btn btn-gold" onclick="addAction()" style="height:36px;align-self:flex-end">Adicionar</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Todas as Iniciativas</div>
+            <div class="card-subtitle">14 ativas · 3 concluídas · 1 atrasada</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <select class="form-select" style="font-size:12px;padding:5px 10px;">
+              <option>Todos os pilares</option>
+              <option>Liderança</option>
+              <option>Colaboração</option>
+            </select>
+            <select class="form-select" style="font-size:12px;padding:5px 10px;">
+              <option>Todos os status</option>
+              <option>Em curso</option>
+              <option>Concluído</option>
+              <option>Atrasado</option>
+            </select>
+          </div>
+        </div>
+        <table class="data-table" id="actions-table">
+          <thead>
+            <tr>
+              <th>Iniciativa</th>
+              <th>Pilar</th>
+              <th>Responsável</th>
+              <th>Prazo</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="actions-body">
+            <tr>
+              <td class="td-name">Workshop de Segurança Psicológica</td>
+              <td>Colaboração</td>
+              <td>Ana Lima</td>
+              <td style="font-family:var(--font-mono);font-size:12px">Jun/25</td>
+              <td><span class="action-status status-done">Concluído</span></td>
+            </tr>
+            <tr>
+              <td class="td-name">Programa Mentoria Reversa</td>
+              <td>Liderança</td>
+              <td>Carlos Mendes</td>
+              <td style="font-family:var(--font-mono);font-size:12px">Jul/25</td>
+              <td><span class="action-status status-progress">Em Curso</span></td>
+            </tr>
+            <tr>
+              <td class="td-name">Revisão da Política de D&I</td>
+              <td>Diversidade</td>
+              <td>Beatriz Costa</td>
+              <td style="font-family:var(--font-mono);font-size:12px">Jun/25</td>
+              <td><span class="action-status status-progress">Em Curso</span></td>
+            </tr>
+            <tr>
+              <td class="td-name">Pesquisa de Clima Semestral</td>
+              <td>Geral</td>
+              <td>Equipe RH</td>
+              <td style="font-family:var(--font-mono);font-size:12px">Jul/25</td>
+              <td><span class="action-status status-pending">Planejado</span></td>
+            </tr>
+            <tr>
+              <td class="td-name">Definição de OKRs Culturais</td>
+              <td>Propósito</td>
+              <td>Diretoria</td>
+              <td style="font-family:var(--font-mono);font-size:12px">Mai/25</td>
+              <td><span class="action-status status-critical">Atrasado</span></td>
+            </tr>
+            <tr>
+              <td class="td-name">Treinamento de Líderes — Feedback</td>
+              <td>Liderança</td>
+              <td>Carlos Mendes</td>
+              <td style="font-family:var(--font-mono);font-size:12px">Ago/25</td>
+              <td><span class="action-status status-pending">Planejado</span></td>
+            </tr>
+            <tr>
+              <td class="td-name">Hackathon de Inovação Interna</td>
+              <td>Inovação</td>
+              <td>Equipe Tecnologia</td>
+              <td style="font-family:var(--font-mono);font-size:12px">Set/25</td>
+              <td><span class="action-status status-pending">Planejado</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════════════ EQUIPE ══════════════ -->
+    <div class="tab-group" id="tab-equipe">
+      <div class="page-header">
+        <div class="page-eyebrow">Pessoas</div>
+        <h1 class="page-title">Equipe &amp;<br><em>Embaixadores</em></h1>
+        <p class="page-subtitle">Gestão das pessoas envolvidas no projeto de transformação cultural.</p>
+      </div>
+      <div class="card">
+        <table class="data-table">
+          <thead>
+            <tr><th>Nome</th><th>Cargo</th><th>Área</th><th>Papel no Projeto</th><th>Engajamento</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-name">Ana Lima</td>
+              <td>Gerente de RH</td>
+              <td>Pessoas &amp; Cultura</td>
+              <td>Coordenadora</td>
+              <td><span class="score-pill pill-high">Alto</span></td>
+            </tr>
+            <tr>
+              <td class="td-name">Carlos Mendes</td>
+              <td>Diretor Comercial</td>
+              <td>Comercial</td>
+              <td>Sponsor Executivo</td>
+              <td><span class="score-pill pill-high">Alto</span></td>
+            </tr>
+            <tr>
+              <td class="td-name">Beatriz Costa</td>
+              <td>Analista D&I</td>
+              <td>Pessoas &amp; Cultura</td>
+              <td>Embaixadora</td>
+              <td><span class="score-pill pill-mid">Médio</span></td>
+            </tr>
+            <tr>
+              <td class="td-name">Pedro Alves</td>
+              <td>Tech Lead</td>
+              <td>Tecnologia</td>
+              <td>Embaixador</td>
+              <td><span class="score-pill pill-high">Alto</span></td>
+            </tr>
+            <tr>
+              <td class="td-name">Mariana Souza</td>
+              <td>Coordenadora Financeira</td>
+              <td>Financeiro</td>
+              <td>Participante</td>
+              <td><span class="score-pill pill-low">Baixo</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════════════ NOTAS ══════════════ -->
+    <div class="tab-group" id="tab-notas">
+      <div class="page-header">
+        <div class="page-eyebrow">Campo livre</div>
+        <h1 class="page-title">Notas &amp;<br><em>Observações</em></h1>
+        <p class="page-subtitle">Registre percepções, aprendizados e observações qualitativas do projeto.</p>
+      </div>
+
+      <div class="card" style="margin-bottom:24px;">
+        <div class="card-header">
+          <div class="card-title">Nova Nota</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:12px;margin-bottom:12px;align-items:end;">
+          <div class="form-group">
+            <label class="form-label">Categoria</label>
+            <select class="form-select" id="note-category">
+              <option>Observação Geral</option>
+              <option>Ponto de Atenção</option>
+              <option>Aprendizado</option>
+              <option>Próximo Passo</option>
+              <option>Feedback</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Pilar Relacionado</label>
+            <select class="form-select" id="note-pillar">
+              <option>Geral</option>
+              <option>Liderança</option>
+              <option>Colaboração</option>
+              <option>Inovação</option>
+              <option>Diversidade</option>
+              <option>Propósito</option>
+            </select>
+          </div>
+        </div>
+        <textarea class="note-editor" id="note-input" placeholder="Registre aqui suas observações, aprendizados, percepções qualitativas ou próximos passos..."></textarea>
+        <div style="display:flex;justify-content:flex-end;margin-top:12px;">
+          <button class="btn btn-gold" onclick="saveNote()">Salvar Nota</button>
+        </div>
+      </div>
+
+      <div class="notes-grid" id="notes-grid">
+        <div class="note-card">
+          <div class="note-card-tag">Aprendizado · Liderança</div>
+          <div class="note-card-body">Líderes da área comercial demonstraram alta receptividade ao workshop. O formato de role-play foi particularmente efetivo para criar empatia.</div>
+          <div class="note-card-footer">06 Jun 2025 · Ana Lima</div>
+        </div>
+        <div class="note-card">
+          <div class="note-card-tag" style="color:var(--red)">Ponto de Atenção · D&I</div>
+          <div class="note-card-body">Área financeira apresenta resistência às iniciativas de inclusão. Necessário trabalhar primeiro com gestor da área antes de ampliar o programa.</div>
+          <div class="note-card-footer">04 Jun 2025 · Beatriz Costa</div>
+        </div>
+        <div class="note-card">
+          <div class="note-card-tag">Feedback · Colaboração</div>
+          <div class="note-card-body">Pesquisa qualitativa apontou que as equipes sentem falta de rituais de celebração de conquistas coletivas. Criar proposta de ritual mensal.</div>
+          <div class="note-card-footer">01 Jun 2025 · Carlos Mendes</div>
+        </div>
+        <div class="note-card">
+          <div class="note-card-tag">Próximo Passo · Inovação</div>
+          <div class="note-card-body">Propor à liderança a criação de um "laboratório de ideias" — ambiente físico e virtual para experimentação sem pressão de resultado imediato.</div>
+          <div class="note-card-footer">28 Mai 2025 · Pedro Alves</div>
+        </div>
+        <div class="note-card">
+          <div class="note-card-tag">Observação Geral</div>
+          <div class="note-card-body">O índice cultural subiu 0.6 pontos no semestre. Iniciativas de segurança psicológica parecem ser as de maior impacto percebido.</div>
+          <div class="note-card-footer">25 Mai 2025 · Ana Lima</div>
+        </div>
+        <div class="note-card">
+          <div class="note-card-tag" style="color:var(--gold)">Ponto de Atenção · Propósito</div>
+          <div class="note-card-body">OKRs culturais ainda não definidos. Sem métricas claras para o 2º semestre, o projeto perde direção. Escalar para CEO esta semana.</div>
+          <div class="note-card-footer">20 Mai 2025 · Ana Lima</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════ HISTÓRICO ══════════════ -->
+    <div class="tab-group" id="tab-historico">
+      <div class="page-header">
+        <div class="page-eyebrow">Linha do Tempo</div>
+        <h1 class="page-title"><em>Histórico</em><br>do Projeto</h1>
+        <p class="page-subtitle">Cronologia de marcos, eventos e decisões do projeto de transformação cultural.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Linha do Tempo</div></div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-date">Jun 2025</div>
+              <div class="timeline-title">Workshop de Segurança Psicológica</div>
+              <div class="timeline-body">200+ participantes. NPS de 72. Alta receptividade na área comercial.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-date">Mai 2025</div>
+              <div class="timeline-title">Lançamento do Programa Mentoria Reversa</div>
+              <div class="timeline-body">15 pares formados. Foco em transferência de conhecimento entre gerações.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-date">Abr 2025</div>
+              <div class="timeline-title">1º Diagnóstico Cultural 2025</div>
+              <div class="timeline-body">Score geral 7.0. Identificação dos 3 pontos de atenção prioritários.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-date">Mar 2025</div>
+              <div class="timeline-title">Kick-off do Projeto de Cultura</div>
+              <div class="timeline-body">Aprovação do comitê executivo. Equipe de 8 pessoas alocada.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-date">Fev 2025</div>
+              <div class="timeline-title">Mapeamento de Stakeholders</div>
+              <div class="timeline-body">Identificação de sponsors, embaixadores e resistências.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-date">Jan 2025</div>
+              <div class="timeline-title">Diagnóstico Inicial — Linha de Base</div>
+              <div class="timeline-body">Score base: 5.9. Referência para medição de impacto ao longo do projeto.</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Marcos do Projeto</div></div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="background:var(--bg-raised);border-radius:4px;padding:14px;border:1px solid var(--border)">
+              <div style="font-family:var(--font-mono);font-size:9px;color:var(--green);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">✓ Concluído</div>
+              <div style="font-size:13px;color:var(--cream);font-weight:500;margin-bottom:4px">Fase 1 — Diagnóstico</div>
+              <div style="font-size:12px;color:var(--text-muted)">Jan — Mar 2025 · Linha de base estabelecida</div>
+            </div>
+            <div style="background:var(--bg-raised);border-radius:4px;padding:14px;border:1px solid rgba(201,168,76,0.25)">
+              <div style="font-family:var(--font-mono);font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">→ Em curso</div>
+              <div style="font-size:13px;color:var(--cream);font-weight:500;margin-bottom:4px">Fase 2 — Ativação</div>
+              <div style="font-size:12px;color:var(--text-muted)">Abr — Jun 2025 · 7 de 10 ações entregues</div>
+            </div>
+            <div style="background:var(--bg-raised);border-radius:4px;padding:14px;border:1px solid var(--border)">
+              <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">○ Planejado</div>
+              <div style="font-size:13px;color:var(--text-secondary);font-weight:500;margin-bottom:4px">Fase 3 — Consolidação</div>
+              <div style="font-size:12px;color:var(--text-muted)">Jul — Set 2025 · Início previsto: 01 Jul</div>
+            </div>
+            <div style="background:var(--bg-raised);border-radius:4px;padding:14px;border:1px solid var(--border)">
+              <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">○ Planejado</div>
+              <div style="font-size:13px;color:var(--text-secondary);font-weight:500;margin-bottom:4px">Fase 4 — Sustentação</div>
+              <div style="font-size:12px;color:var(--text-muted)">Out — Dez 2025 · Início previsto: 01 Out</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ─── MODAL ─── -->
+<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-title">Nova Entrada</div>
+    <div class="modal-sub">Registre uma nova ação, nota ou atualização de score.</div>
+    <div class="full-form">
+      <div class="form-group">
+        <label class="form-label">Tipo</label>
+        <select class="form-select" id="modal-type" onchange="updateModalType()">
+          <option value="acao">Ação / Iniciativa</option>
+          <option value="nota">Nota / Observação</option>
+          <option value="score">Atualização de Score</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Título / Descrição</label>
+        <input class="form-input" type="text" id="modal-title" placeholder="Descreva brevemente...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Pilar Cultural</label>
+        <select class="form-select" id="modal-pillar">
+          <option>Liderança</option>
+          <option>Colaboração</option>
+          <option>Inovação</option>
+          <option>Foco no Cliente</option>
+          <option>Diversidade &amp; Inclusão</option>
+          <option>Propósito</option>
+          <option>Geral</option>
+        </select>
+      </div>
+      <div class="form-group" id="modal-date-group">
+        <label class="form-label">Data / Prazo</label>
+        <input class="form-input" type="month" id="modal-date" value="2025-07">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-gold" onclick="saveEntry()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── TOAST ─── -->
+<div class="toast" id="toast">
+  <div class="toast-dot"></div>
+  <span id="toast-msg">Registro salvo com sucesso.</span>
+</div>
+
+<script>
+  // ─── NAVIGATION ───────────────────────────────
+  function navigate(tab, el) {
+    document.querySelectorAll('.tab-group').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    if (el) el.classList.add('active');
+
+    const labels = {
+      dashboard: 'Dashboard',
+      diagnostico: 'Diagnóstico',
+      pilares: 'Pilares & Valores',
+      acoes: 'Iniciativas & Ações',
+      equipe: 'Equipe',
+      notas: 'Notas & Observações',
+      historico: 'Histórico'
+    };
+    document.getElementById('breadcrumb-current').textContent = labels[tab] || tab;
+  }
+
+  // ─── HEATMAP GENERATION ───────────────────────
+  function buildHeatmap() {
+    const grid = document.getElementById('heatmap');
+    const data = [4,2,3,4,2,1,3,4,3,2,4,3,
+                  2,4,3,1,2,3,4,2,3,4,3,2,
+                  1,2,4,3,2,1,2,3,4,3,2,4,
+                  3,2,1,4,3,2,1,2,3,4,3,2];
+    data.forEach(v => {
+      const cell = document.createElement('div');
+      cell.className = `heatmap-cell heat-${v}`;
+      cell.title = `${v} atividade(s)`;
+      grid.appendChild(cell);
+    });
+  }
+
+  buildHeatmap();
+
+  // ─── MODAL ────────────────────────────────────
+  function openModal() {
+    document.getElementById('modal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+  }
+
+  function closeModalOutside(e) {
+    if (e.target === document.getElementById('modal')) closeModal();
+  }
+
+  function saveEntry() {
+    closeModal();
+    showToast('Registro salvo com sucesso.');
+  }
+
+  // ─── NOTES ────────────────────────────────────
+  function saveNote() {
+    const text = document.getElementById('note-input').value.trim();
+    if (!text) return;
+    const cat = document.getElementById('note-category').value;
+    const pillar = document.getElementById('note-pillar').value;
+
+    const card = document.createElement('div');
+    card.className = 'note-card';
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('pt-BR', {day:'2-digit', month:'short', year:'numeric'});
+    card.innerHTML = `
+      <div class="note-card-tag">${cat} · ${pillar}</div>
+      <div class="note-card-body">${text}</div>
+      <div class="note-card-footer">${dateStr} · Você</div>
+    `;
+    document.getElementById('notes-grid').prepend(card);
+    document.getElementById('note-input').value = '';
+    showToast('Nota registrada.');
+  }
+
+  // ─── ACTIONS ──────────────────────────────────
+  function addAction() {
+    const title = document.querySelector('#tab-acoes .form-input[type=text]').value.trim();
+    const pillar = document.querySelector('#tab-acoes .form-select').value;
+    const date = document.querySelector('#tab-acoes input[type=month]').value;
+    if (!title) return;
+
+    const row = document.createElement('tr');
+    const monthLabel = date ? new Date(date + '-01').toLocaleDateString('pt-BR', {month:'short', year:'2-digit'}) : '—';
+    row.innerHTML = `
+      <td class="td-name">${title}</td>
+      <td>${pillar}</td>
+      <td>—</td>
+      <td style="font-family:var(--font-mono);font-size:12px">${monthLabel}</td>
+      <td><span class="action-status status-pending">Planejado</span></td>
+    `;
+    document.getElementById('actions-body').appendChild(row);
+    document.querySelector('#tab-acoes .form-input[type=text]').value = '';
+    showToast('Iniciativa adicionada.');
+  }
+
+  // ─── TOAST ────────────────────────────────────
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  // ─── SEGMENTED CONTROLS ───────────────────────
+  document.querySelectorAll('.seg-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      this.closest('.seg-control').querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // ─── PROGRESS BAR ANIMATION ON LOAD ──────────
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.querySelectorAll('.progress-fill').forEach(bar => {
+        const w = bar.style.width;
+        bar.style.width = '0';
+        setTimeout(() => { bar.style.width = w; }, 100);
+      });
+    }, 200);
+  });
+</script>
+</body>
+</html>
